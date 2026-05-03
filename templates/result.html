@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verification Result</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    {% if result.found %}
+
+        <h1>✅ Genuine Product</h1>
+
+        <p>
+            Product: {{ product_name }}
+        </p>
+
+        <p>
+            Manufacturer: {{ result.manufacturer }}
+        </p>
+
+        <p>
+            Blockchain Hash:
+        </p>
+
+        <small>
+            {{ result.hash }}
+        </small>
+
+    {% else %}
+
+        <h1>❌ Fake Product</h1>
+
+        <p>
+            Product not found in blockchain.
+        </p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
