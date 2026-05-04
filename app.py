@@ -1,50 +1,12 @@
-from flask import Flask, render_template, request
-from blockchain import Blockchain
+from flask import Flask
+import os
 
 app = Flask(__name__)
 
-blockchain = Blockchain()
-
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return "Blockchain App is Running 🚀"
 
-@app.route('/add_product', methods=['POST'])
-def add_product():
-
-    product_name = request.form['product_name']
-    manufacturer = request.form['manufacturer']
-
-    previous_block = blockchain.get_previous_block()
-
-    blockchain.create_block(
-        {
-            'product_name': product_name,
-            'manufacturer': manufacturer
-        },
-        previous_block['hash']
-    )
-
-    return render_template(
-        'success.html',
-        product_name=product_name
-    )
-
-@app.route('/verify')
-def verify_page():
-    return render_template('verify.html')
-
-@app.route('/verify_product', methods=['POST'])
-def verify_product():
-
-    product_name = request.form['product_name']
-
-    result = blockchain.verify_product(product_name)
-
-    return render_template(
-        'result.html',
-        result=result,
-        product_name=product_name
-    )
-
-app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
