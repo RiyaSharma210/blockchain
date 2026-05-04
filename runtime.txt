@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 python-3.11.8
+=======
+python-3.11.8
+>>>>>>> 790d37d (Added QR verification system)

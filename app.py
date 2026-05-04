@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from blockchain import Blockchain
 import os
+import qrcode
 
 app = Flask(__name__)
 
@@ -26,9 +27,19 @@ def add_product():
         previous_block['hash']
     )
 
+    # QR Verification Link
+    verification_link = f"https://blockchain-0kt1.onrender.com/verify_product_qr/{product_name}"
+
+    # Generate QR
+    qr = qrcode.make(verification_link)
+
+    # Save QR Image
+    qr.save(f"static/qrcodes/{product_name}.png")
+
     return render_template(
         'success.html',
-        product_name=product_name
+        product_name=product_name,
+        qr_image=f"{product_name}.png"
     )
 
 @app.route('/verify')
@@ -50,4 +61,15 @@ def verify_product():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    @app.route('/verify_product_qr/<product_name>')
+def verify_product_qr(product_name):
+
+    result = blockchain.verify_product(product_name)
+
+    return render_template(
+        'result.html',
+        result=result,
+        product_name=product_name
+    )
+
+app.run(host="0.0.0.0", port=port)
