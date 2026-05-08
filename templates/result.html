@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Verification Result</title>
 
     <link rel="stylesheet" href="/static/style.css">
+
 </head>
+
 <body>
 
 <div class="container">
 
-    {% if result.found %}
+    {% if result %}
 
-        <h1>✅ Genuine Product</h1>
+        <h1 style="color:green;">
+            ✅ Genuine Product
+        </h1>
+
+        <h2>
+            Product Name:
+            {{ product_name }}
+        </h2>
 
         <p>
-            Product: {{ product_name }}
+            This product exists in blockchain records.
         </p>
-
-        <p>
-            Manufacturer: {{ result.manufacturer }}
-        </p>
-
-        <p>
-            Blockchain Hash:
-        </p>
-
-        <small>
-            {{ result.hash }}
-        </small>
 
     {% else %}
 
-        <h1>❌ Fake Product</h1>
+        <h1 style="color:red;">
+            ❌ Fake Product
+        </h1>
+
+        <h2>
+            Product Name:
+            {{ product_name }}
+        </h2>
 
         <p>
             Product not found in blockchain.
         </p>
 
     {% endif %}
+
+    <br>
+
+    <a href="/">
+        <button>
+            Back To Home
+        </button>
+    </a>
 
 </div>
 
