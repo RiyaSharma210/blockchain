@@ -180,7 +180,7 @@ class Blockchain:
 
             if data:
 
-                if data['product_name'].lower() == product_name.lower():
+                if data['product_name'].strip().lower() == product_name.strip().lower():
 
                     return {
 
