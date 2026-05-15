@@ -8,7 +8,9 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Product Added</title>
+    <title>
+        Product Added
+    </title>
 
     <link rel="stylesheet" href="/static/style.css">
 
@@ -22,31 +24,51 @@
         ✅ Product Added Successfully
     </h1>
 
-    <h2>
-        {{ product_name }}
-    </h2>
+    <br>
 
-    <p>
-        Product securely added to blockchain.
-    </p>
+    <div class="details-box">
+
+        <p>
+
+            <strong>Product:</strong>
+
+            {{ product_name }}
+
+        </p>
+
+    </div>
+
+    <br><br>
+
+    <h2>
+        📷 Product QR Code
+    </h2>
 
     <br>
 
-    <h3>
-        📱 Scan QR To Verify Product
-    </h3>
-
     <img
         src="/static/qrcodes/{{ qr_image }}"
-        alt="QR Code"
         width="250"
     >
 
     <br><br>
 
-    <a href="/">
+    <a
+        href="/static/qrcodes/{{ qr_image }}"
+        download
+    >
 
         <button>
+            ⬇ Download QR Code
+        </button>
+
+    </a>
+
+    <br><br>
+
+    <a href="/">
+
+        <button class="verify-btn">
             🔙 Back To Home
         </button>
 

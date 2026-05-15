@@ -358,3 +358,33 @@ tr:hover{
         transform:rotate(360deg);
     }
 }
+/* BUTTON GROUP */
+
+.button-group{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+}
+
+
+/* SCAN BUTTON */
+
+.scan-btn{
+
+    background:#f59e0b;
+}
+
+.scan-btn:hover{
+
+    background:#d97706;
+
+    box-shadow:
+    0 0 20px rgba(245,158,11,0.5);
+}

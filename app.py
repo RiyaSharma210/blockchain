@@ -68,6 +68,17 @@ def add_product():
 
     product_image = request.files['product_image']
 
+    # CHECK DUPLICATE PRODUCT
+
+    if blockchain.product_exists(product_id):
+
+        return render_template(
+
+            'duplicate.html',
+
+            product_id=product_id
+        )
+
     # SAVE PRODUCT IMAGE
 
     image_filename = product_image.filename
@@ -105,9 +116,9 @@ def add_product():
     # QR VERIFICATION LINK
 
     verification_link = (
-        f"https://blockchain-0kt1.onrender.com/"
-        f"verify_product_qr/{product_name}"
-    )
+    f"https://blockchain-0kt1.onrender.com/"
+    f"verify_product_qr/{product_name}"
+)
 
     # GENERATE QR CODE
 
@@ -139,6 +150,16 @@ def add_product():
 def verify_page():
 
     return render_template('verify.html')
+
+
+# =========================
+# SCAN PRODUCT PAGE
+# =========================
+
+@app.route('/scan')
+def scan_product():
+
+    return render_template('scan.html')
 
 
 # =========================

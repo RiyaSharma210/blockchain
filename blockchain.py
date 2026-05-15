@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 from time import time
 from datetime import datetime
 
@@ -12,7 +13,39 @@ class Blockchain:
 
         self.fake_detected = 0
 
-        self.create_block(previous_hash='0')
+        # LOAD SAVED BLOCKCHAIN
+
+        self.load_chain()
+
+        # CREATE GENESIS BLOCK IF EMPTY
+
+        if len(self.chain) == 0:
+
+            self.create_block(previous_hash='0')
+
+
+    # =========================
+    # SAVE BLOCKCHAIN
+    # =========================
+
+    def save_chain(self):
+
+        with open('blockchain_data.json', 'w') as file:
+
+            json.dump(self.chain, file)
+
+
+    # =========================
+    # LOAD BLOCKCHAIN
+    # =========================
+
+    def load_chain(self):
+
+        if os.path.exists('blockchain_data.json'):
+
+            with open('blockchain_data.json', 'r') as file:
+
+                self.chain = json.load(file)
 
 
     # =========================
@@ -35,6 +68,10 @@ class Blockchain:
         block['hash'] = self.hash(block)
 
         self.chain.append(block)
+
+        # SAVE BLOCKCHAIN
+
+        self.save_chain()
 
         return block
 
@@ -62,6 +99,25 @@ class Blockchain:
     def get_previous_block(self):
 
         return self.chain[-1]
+
+
+    # =========================
+    # CHECK DUPLICATE PRODUCT
+    # =========================
+
+    def product_exists(self, product_id):
+
+        for block in self.chain:
+
+            data = block['product_data']
+
+            if data:
+
+                if data['product_id'] == product_id:
+
+                    return True
+
+        return False
 
 
     # =========================
@@ -146,8 +202,6 @@ class Blockchain:
                             "%d-%m-%Y %I:%M:%S %p"
                         )
                     }
-
-        # INCREASE FAKE DETECTION COUNT
 
         self.fake_detected += 1
 
