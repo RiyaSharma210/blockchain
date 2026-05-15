@@ -9,219 +9,142 @@ app = Flask(__name__)
 # =========================
 # PRODUCT IMAGE FOLDER
 # =========================
-
 UPLOAD_FOLDER = 'static/product_images'
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # =========================
 # QR CODE FOLDER
 # =========================
-
 os.makedirs("static/qrcodes", exist_ok=True)
 
 # =========================
 # INITIALIZE BLOCKCHAIN
 # =========================
-
 blockchain = Blockchain()
-
 
 # =========================
 # HOME PAGE
 # =========================
-
 @app.route('/')
 def home():
-
     stats = blockchain.get_statistics()
-
     history = blockchain.get_history()
 
     return render_template(
-
         'index.html',
-
         stats=stats,
-
         history=history
     )
-
 
 # =========================
 # ADD PRODUCT
 # =========================
-
 @app.route('/add_product', methods=['POST'])
 def add_product():
 
-    # FORM DATA
-
     product_name = request.form['product_name']
-
     manufacturer = request.form['manufacturer']
-
     product_id = request.form['product_id']
-
     manufacturing_date = request.form['manufacturing_date']
-
     product_image = request.files['product_image']
 
-    # CHECK DUPLICATE PRODUCT
-
+    # CHECK DUPLICATE
     if blockchain.product_exists(product_id):
+        return render_template('duplicate.html', product_id=product_id)
 
-        return render_template(
-
-            'duplicate.html',
-
-            product_id=product_id
-        )
-
-    # SAVE PRODUCT IMAGE
-
+    # SAVE IMAGE
     image_filename = product_image.filename
-
-    image_path = os.path.join(
-        app.config['UPLOAD_FOLDER'],
-        image_filename
-    )
-
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
     product_image.save(image_path)
 
     # GET PREVIOUS BLOCK
-
     previous_block = blockchain.get_previous_block()
 
-    # CREATE NEW BLOCK
-
+    # CREATE BLOCK
     blockchain.create_block(
-
         {
             'product_name': product_name,
-
             'manufacturer': manufacturer,
-
             'product_id': product_id,
-
             'manufacturing_date': manufacturing_date,
-
             'image': image_filename
         },
-
         previous_block['hash']
     )
 
     # =========================
-    # QR VERIFICATION LINK
+    # FIXED QR LINK (IMPORTANT)
     # =========================
-
     verification_link = (
         f"https://blockchain-0kt1.onrender.com/"
-        f"verify_product_qr?product_name={quote(product_name)}"
+        f"verify_product_qr?product_id={quote(product_id)}"
     )
 
-    # =========================
-    # GENERATE QR CODE
-    # =========================
-
+    # GENERATE QR
     qr = qrcode.make(verification_link)
 
-    # SAVE QR IMAGE
-
-    qr_path = f"static/qrcodes/{product_name}.png"
-
+    qr_filename = f"{product_id}.png"
+    qr_path = f"static/qrcodes/{qr_filename}"
     qr.save(qr_path)
 
-    # SHOW SUCCESS PAGE
-
     return render_template(
-
         'success.html',
-
         product_name=product_name,
-
-        qr_image=f"{product_name}.png"
+        qr_image=qr_filename
     )
-
 
 # =========================
 # VERIFY PAGE
 # =========================
-
 @app.route('/verify')
 def verify_page():
-
     return render_template('verify.html')
 
-
 # =========================
-# SCAN PRODUCT PAGE
+# SCAN PAGE
 # =========================
-
 @app.route('/scan')
 def scan_product():
-
     return render_template('scan.html')
 
-
 # =========================
-# VERIFY PRODUCT MANUALLY
+# MANUAL VERIFY
 # =========================
-
 @app.route('/verify_product', methods=['POST'])
 def verify_product():
 
-    product_name = request.form['product_name']
+    product_id = request.form['product_id']
 
-    result = blockchain.verify_product(product_name)
+    result = blockchain.verify_product(product_id)
 
-    return render_template(
-
-        'result.html',
-
-        result=result
-    )
-
+    return render_template('result.html', result=result)
 
 # =========================
-# VERIFY PRODUCT USING QR
+# QR VERIFY (FIXED)
 # =========================
-
 @app.route('/verify_product_qr')
 def verify_product_qr():
 
-    product_name = request.args.get('product_name')
+    product_id = request.args.get('product_id')
 
-    # DECODE PRODUCT NAME
+    if not product_id:
+        return render_template('result.html', result="INVALID QR")
 
-    product_name = unquote(product_name)
+    product_id = unquote(product_id)
 
-    result = blockchain.verify_product(product_name)
+    result = blockchain.verify_product(product_id)
 
-    return render_template(
-
-        'result.html',
-
-        result=result
-    )
-
+    return render_template('result.html', result=result)
 
 # =========================
-# RUN APPLICATION
+# RUN APP
 # =========================
-
 if __name__ == "__main__":
-
     port = int(os.environ.get("PORT", 10000))
 
     app.run(
-
         host="0.0.0.0",
-
         port=port,
-
         debug=True
     )
