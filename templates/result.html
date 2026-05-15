@@ -1,8 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-    <title>Verification Result</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Verification Result
+    </title>
 
     <link rel="stylesheet" href="/static/style.css">
 
@@ -12,47 +20,133 @@
 
 <div class="container">
 
-    {% if result %}
+    <!-- LOADING SCREEN -->
 
-        <h1 style="color:green;">
+    <div id="loading-screen">
+
+        <div class="loader"></div>
+
+        <h2>
+            🔍 Verifying Product On Blockchain...
+        </h2>
+
+    </div>
+
+
+    <!-- RESULT SECTION -->
+
+    <div id="result-section" style="display:none;">
+
+    {% if result.found %}
+
+        <h1 style="color:lime;">
             ✅ Genuine Product
         </h1>
 
-        <h2>
-            Product Name:
-            {{ product_name }}
-        </h2>
+        <br>
 
-        <p>
-            This product exists in blockchain records.
-        </p>
+        <img
+            src="/static/product_images/{{ result.image }}"
+            width="250"
+        >
+
+        <br><br>
+
+        <div class="details-box">
+
+            <h2>
+                📦 Product Details
+            </h2>
+
+            <br>
+
+            <p>
+                <strong>Product Name:</strong>
+                {{ result.product_name }}
+            </p>
+
+            <p>
+                <strong>Manufacturer:</strong>
+                {{ result.manufacturer }}
+            </p>
+
+            <p>
+                <strong>Product ID:</strong>
+                {{ result.product_id }}
+            </p>
+
+            <p>
+                <strong>Manufacturing Date:</strong>
+                {{ result.manufacturing_date }}
+            </p>
+
+            <p>
+                <strong>Verified At:</strong>
+                {{ result.verified_at }}
+            </p>
+
+            <p>
+                <strong>Blockchain Hash:</strong>
+            </p>
+
+            <p>
+                {{ result.hash }}
+            </p>
+
+        </div>
 
     {% else %}
 
         <h1 style="color:red;">
-            ❌ Fake Product
+            ❌ Fake Product Detected
         </h1>
 
-        <h2>
-            Product Name:
-            {{ product_name }}
-        </h2>
+        <br>
 
-        <p>
-            Product not found in blockchain.
-        </p>
+        <div class="details-box">
+
+            <p>
+                This product does not exist in blockchain records.
+            </p>
+
+            <p>
+                Possible counterfeit product detected.
+            </p>
+
+        </div>
 
     {% endif %}
 
     <br>
 
     <a href="/">
+
         <button>
-            Back To Home
+            🔙 Back To Home
         </button>
+
     </a>
 
+    </div>
+
 </div>
+
+
+<script>
+
+    setTimeout(function(){
+
+        document.getElementById(
+            "loading-screen"
+        ).style.display = "none";
+
+        document.getElementById(
+            "result-section"
+        ).style.display = "block";
+
+    }, 2500);
+
+</script>
 
 </body>
 </html>

@@ -1,57 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>BlockTrace</title>
 
     <link rel="stylesheet" href="/static/style.css">
+
 </head>
+
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>BlockTrace</h1>
+    <h1>
+        🔗 BlockTrace
+    </h1>
 
-        <p>
-            Fake Product Detection Using Blockchain
-        </p>
+    <p class="subtitle">
+        Blockchain Based Fake Product Detection System
+    </p>
 
-        <form action="/add_product" method="POST">
 
-            <input
-                type="text"
-                name="product_name"
-                placeholder="Enter Product Name"
-                required
-            >
+    <!-- DASHBOARD STATS -->
 
-            <br><br>
+    <div class="stats">
 
-            <input
-                type="text"
-                name="manufacturer"
-                placeholder="Enter Manufacturer Name"
-                required
-            >
+        <div class="card">
 
-            <br><br>
+            <h2>
+                {{ stats.total_products }}
+            </h2>
 
-            <button type="submit">
-                Add Product
-            </button>
+            <p>
+                📦 Total Products
+            </p>
 
-        </form>
+        </div>
 
-        <br><br>
+        <div class="card">
 
-        <a href="/verify">
-            <button>
-                Go To Verification
-            </button>
-        </a>
+            <h2>
+                {{ stats.total_blocks }}
+            </h2>
+
+            <p>
+                ⛓ Blockchain Blocks
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>
+                {{ stats.genuine_products }}
+            </h2>
+
+            <p>
+                ✅ Genuine Products
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>
+                {{ stats.fake_detected }}
+            </h2>
+
+            <p>
+                ❌ Fake Detections
+            </p>
+
+        </div>
 
     </div>
+
+
+    <!-- ADD PRODUCT FORM -->
+
+    <form
+        action="/add_product"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <input
+            type="text"
+            name="product_name"
+            placeholder="Enter Product Name"
+            required
+        >
+
+        <input
+            type="text"
+            name="manufacturer"
+            placeholder="Enter Manufacturer Name"
+            required
+        >
+
+        <input
+            type="text"
+            name="product_id"
+            placeholder="Enter Product ID"
+            required
+        >
+
+        <input
+            type="date"
+            name="manufacturing_date"
+            required
+        >
+
+        <input
+            type="file"
+            name="product_image"
+            required
+        >
+
+        <button type="submit">
+            🚀 Add Product To Blockchain
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/verify">
+
+        <button class="verify-btn">
+            🔍 Verify Product
+        </button>
+
+    </a>
+
+
+    <!-- VERIFICATION HISTORY -->
+
+    <br><br>
+
+    <h2>
+        📜 Verification History
+    </h2>
+
+    <table>
+
+        <tr>
+
+            <th>
+                Product
+            </th>
+
+            <th>
+                Manufacturer
+            </th>
+
+            <th>
+                Product ID
+            </th>
+
+        </tr>
+
+        {% for item in history %}
+
+        <tr>
+
+            <td>
+                {{ item.product_name }}
+            </td>
+
+            <td>
+                {{ item.manufacturer }}
+            </td>
+
+            <td>
+                {{ item.product_id }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
 
 </body>
 </html>
