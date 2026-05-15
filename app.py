@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from blockchain import Blockchain
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 import os
 import qrcode
 
@@ -114,13 +114,18 @@ def add_product():
         previous_block['hash']
     )
 
+    # =========================
     # QR VERIFICATION LINK
+    # =========================
 
     verification_link = (
-    f"https://blockchain-0kt1.onrender.com/"
-    f"verify_product_qr?product_name={quote(product_name)}"
-)
+        f"https://blockchain-0kt1.onrender.com/"
+        f"verify_product_qr?product_name={quote(product_name)}"
+    )
+
+    # =========================
     # GENERATE QR CODE
+    # =========================
 
     qr = qrcode.make(verification_link)
 
@@ -189,6 +194,10 @@ def verify_product():
 def verify_product_qr():
 
     product_name = request.args.get('product_name')
+
+    # DECODE PRODUCT NAME
+
+    product_name = unquote(product_name)
 
     result = blockchain.verify_product(product_name)
 
